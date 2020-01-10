@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rock Paper Scissors</title>
+  <meta charset="UTF-8"/>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class = "container">
+    <h3 id = "scores">Player Score: 0 | Computer Score: 0</h3>
+    <div class = "results">
+      
+    </div>
+    <div class = "message">
+
+    </div>
+    <div class = "choices">
+      <div class = "choice" id = "rock">
+        <img alt = "rock" src = "images/rock.jpeg">
+      </div>
+      <div class = "choice" id = "paper">
+        <img alt = "paper" src = "images/paper.jpeg">
+      </div>
+      <div class = "choice" id = "scissors">
+        <img alt = "scissors" src = "images/scissors.jpeg">
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    //randomly chooses rock, paper, or scissors for the computer
+    function computerPlay(){
+      let choice  = Math.random()
+      if (choice > .666){
+        return "rock";
+      }
+      else if (choice >.333){
+        return "paper";
+      }
+      else{
+        return "scissors";
+      }
+    }
+
+    //returns the results of the player and computer selections
+    function playRound(playerSelection, computerSelection){
+      playerSelection = playerSelection.toLowerCase();
+      if (playerSelection == "rock"){
+        switch (computerSelection){
+          case "rock":
+            return "Tie! You both played Rock"
+          case "paper": 
+            return "You lose! Paper beats Rock"
+          case "scissors":
+            return "You win! Rock beats Scissors"
+        }
+      }
+      else if (playerSelection == "paper"){
+        switch (computerSelection){
+          case "rock":
+            return "You win! Paper beats Rock"
+          case "paper": 
+            return "Tie! You both played Paper"
+          case "scissors":
+            return "You lose! Scissors beats Paper"
+        }
+      }
+      else if (playerSelection == "scissors"){
+        switch (computerSelection){
+          case "rock":
+            return "You lose! Rock beats Scissors"
+          case "paper": 
+            return "You win! Scissors beats Paper"
+          case "scissors":
+            return "Tie! You both played Scissors"
+        }
+      }
+    }
+
+    /*function promptPlayer(){
+      let playerSelection = prompt("Choose Rock, Paper, or Scissors");
+      while (!(playerSelection.toLowerCase() == "rock" || playerSelection.toLowerCase() == "paper" || playerSelection.toLowerCase() == "scissors")){
+        playerSelection = prompt("I didn't understand that. Rock, Paper, or Scissors?");
+      }
+      return playerSelection;
+    }*/
+
+    function updateScore(result){
+      if (result.includes("win")){
+        playerScore++;
+        console.log("updated player score")
+      }
+      else if (result.includes("lose")){
+        computerScore++;
+        console.log("updated computer score")
+      }
+    }
+
+    let playerSelection = "rock";
+    let computerSelection = computerPlay();
+    let playerScore = 0;
+    let computerScore = 0;
+    let resultText;
+    let numGames = 0;
+
+    //displays the images of player and computer and the result message
+    function displayResults(){
+      const iconDisplay = document.querySelector('.results');
+      const messageDisplay = document.querySelector('.message');
+      const scores = document.querySelector('#scores');
+
+      while (iconDisplay.firstChild){
+        iconDisplay.removeChild(iconDisplay.firstChild); //removes images from previous game
+      }
+      if (messageDisplay.firstChild) messageDisplay.removeChild(messageDisplay.firstChild);
+
+      const playerIcon = document.createElement('img');
+      playerIcon.src = `images/${playerSelection}.jpeg`;
+      playerIcon.classList.add('result');
+      const computerIcon = document.createElement('img');
+      computerIcon.src = `images/${computerSelection}.jpeg`;
+      computerIcon.classList.add('result');
+      const resultMessage1 = document.createElement('h2');
+      resultMessage1.textContent = resultText;
+
+      scores.textContent = "Player Score: " + playerScore + " | Computer Score: " + computerScore;
+
+      iconDisplay.appendChild(playerIcon);
+      iconDisplay.appendChild(computerIcon);
+      messageDisplay.appendChild(resultMessage1);
+    }
+
+    function playGame(){
+      playerSelection = this.id; //sets player selection to the icon that was clicked
+      computerSelection = computerPlay();
+      
+      resultText = playRound(playerSelection,computerSelection);
+      updateScore(resultText);
+
+      console.log(resultText);
+      console.log("Player Score: " + playerScore + ", Computer Score: " + computerScore);
+      
+      displayResults();
+    }
+
+    const choices = document.querySelectorAll('.choice');
+    choices.forEach(choice => choice.addEventListener('click', playGame));
+
+    
+  </script>
+</body>
+</html>
